@@ -1,7 +1,13 @@
 package com.ttweb55.recipeapp.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "recipes")
@@ -14,11 +20,32 @@ public class Recipe extends Auditable
     private String title;
     private String source;
 
-//    private Category category;
+//    So Recipe - Many to many with Category
+//One to many Ingredients
+//One to many Instructions
+    //    private Category category;
+    @ManyToMany()
+    @JoinTable(name = "recipecategories",
+        joinColumns = @JoinColumn(name = "recipeid"),
+        inverseJoinColumns = @JoinColumn(name = "categoryid")
+    )
+    @JsonIgnoreProperties(value = "recipes", allowSetters = true)
+    private Set<Category> categories = new HashSet<>();
+
 
 //    private Ingredient ingredient;
+    @OneToMany(mappedBy = "recipe",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true)
+    @JsonIgnoreProperties(value = "recipe", allowSetters = true)
+    private List<Ingredient> ingredients = new ArrayList<>();
 
 //    private Instructions instructions;
+    @OneToMany(mappedBy = "recipe",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true)
+    @JsonIgnoreProperties(value = "recipe", allowSetters = true)
+    private List<Instructions> instructions = new ArrayList<>();
 
     public Recipe()
     {
@@ -63,33 +90,27 @@ public class Recipe extends Auditable
         this.source = source;
     }
 
-//    public Category getCategory()
-//    {
-//        return category;
-//    }
-//
-//    public void setCategory(Category category)
-//    {
-//        this.category = category;
-//    }
-//
-//    public Ingredient getIngredient()
-//    {
-//        return ingredient;
-//    }
-//
-//    public void setIngredient(Ingredient ingredient)
-//    {
-//        this.ingredient = ingredient;
-//    }
-//
-//    public Instructions getInstructions()
-//    {
-//        return instructions;
-//    }
-//
-//    public void setInstructions(Instructions instructions)
-//    {
-//        this.instructions = instructions;
-//    }
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public List<Instructions> getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(List<Instructions> instructions) {
+        this.instructions = instructions;
+    }
 }
