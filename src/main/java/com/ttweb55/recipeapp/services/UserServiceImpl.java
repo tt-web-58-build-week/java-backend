@@ -101,7 +101,7 @@ public class UserServiceImpl
         newUser.setUsername(user.getUsername()
             .toLowerCase());
         newUser.setPasswordNoEncrypt(user.getPassword());
-        newUser.setPrimaryemail(user.getPrimaryemail()
+        newUser.setEmail(user.getEmail()
             .toLowerCase());
 
         newUser.getRoles()
@@ -115,14 +115,14 @@ public class UserServiceImpl
                     addRole));
         }
 
-        newUser.getUseremails()
-            .clear();
-        for (Useremail ue : user.getUseremails())
-        {
-            newUser.getUseremails()
-                .add(new Useremail(newUser,
-                    ue.getUseremail()));
-        }
+//        newUser.getUseremails()
+//            .clear();
+//        for (Useremail ue : user.getUseremails())
+//        {
+//            newUser.getUseremails()
+//                .add(new Useremail(newUser,
+//                    ue.getUseremail()));
+//        }
 
         return userrepos.save(newUser);
     }
@@ -148,9 +148,9 @@ public class UserServiceImpl
                 currentUser.setPasswordNoEncrypt(user.getPassword());
             }
 
-            if (user.getPrimaryemail() != null)
+            if (user.getEmail() != null)
             {
-                currentUser.setPrimaryemail(user.getPrimaryemail()
+                currentUser.setEmail(user.getEmail()
                     .toLowerCase());
             }
 
@@ -170,18 +170,18 @@ public class UserServiceImpl
                 }
             }
 
-            if (user.getUseremails()
-                .size() > 0)
-            {
-                currentUser.getUseremails()
-                    .clear();
-                for (Useremail ue : user.getUseremails())
-                {
-                    currentUser.getUseremails()
-                        .add(new Useremail(currentUser,
-                            ue.getUseremail()));
-                }
-            }
+//            if (user.getUseremails()
+//                .size() > 0)
+//            {
+//                currentUser.getUseremails()
+//                    .clear();
+//                for (Useremail ue : user.getUseremails())
+//                {
+//                    currentUser.getUseremails()
+//                        .add(new Useremail(currentUser,
+//                            ue.getUseremail()));
+//                }
+//            }
 
             return userrepos.save(currentUser);
         } else

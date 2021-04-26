@@ -49,8 +49,8 @@ public class OpenController
      * This endpoint always anyone to create an account with the default role of USER. That role is hardcoded in this method.
      *
      * @param httpServletRequest the request that comes in for creating the new user
-     * @param newminuser         A special minimum set of data that is needed to create a new user
-     * @return The token access and other relevent data to token access. Status of CREATED. The location header to look up the new user.
+     * @param newMinUser         A special minimum set of data that is needed to create a new user
+     * @return The token access and other relevant data to token access. Status of CREATED. The location header to look up the new user.
      * @throws URISyntaxException we create some URIs during this method. If anything goes wrong with that creation, an exception is thrown.
      */
     @PostMapping(value = "/createnewuser",
@@ -60,30 +60,30 @@ public class OpenController
         HttpServletRequest httpServletRequest,
         @Valid
         @RequestBody
-            UserMinimum newminuser)
+            UserMinimum newMinUser)
         throws
         URISyntaxException
     {
         // Create the user
-        User newuser = new User();
+        User newUser = new User();
 
-        newuser.setUsername(newminuser.getUsername());
-        newuser.setPassword(newminuser.getPassword());
-        newuser.setPrimaryemail(newminuser.getPrimaryemail());
+        newUser.setUsername(newMinUser.getUsername());
+        newUser.setPassword(newMinUser.getPassword());
+        newUser.setEmail(newMinUser.getPrimaryemail());
 
         // add the default role of user
         Set<UserRoles> newRoles = new HashSet<>();
-        newRoles.add(new UserRoles(newuser,
+        newRoles.add(new UserRoles(newUser,
             roleService.findByName("user")));
-        newuser.setRoles(newRoles);
+        newUser.setRoles(newRoles);
 
-        newuser = userService.save(newuser);
+        newUser = userService.save(newUser);
 
         // set the location header for the newly created resource
         // The location comes from a different controller!
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newUserURI = ServletUriComponentsBuilder.fromUriString(httpServletRequest.getServerName() + ":" + httpServletRequest.getLocalPort() + "/users/user/{userId}")
-            .buildAndExpand(newuser.getUserid())
+            .buildAndExpand(newUser.getUserid())
             .toUri();
         responseHeaders.setLocation(newUserURI);
 
@@ -107,9 +107,9 @@ public class OpenController
         map.add("scope",
             "read write trust");
         map.add("username",
-            newminuser.getUsername());
+            newMinUser.getUsername());
         map.add("password",
-            newminuser.getPassword());
+            newMinUser.getPassword());
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map,
             headers);
