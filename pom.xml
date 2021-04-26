@@ -112,7 +112,7 @@
     </dependencies>
 
     <build>
-        <finalName>jrmmba-foundation</finalName>
+        <finalName>tt-web58-recipe-app</finalName>
 
         <plugins>
             <plugin>
