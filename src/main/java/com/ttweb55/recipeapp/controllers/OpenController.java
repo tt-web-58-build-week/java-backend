@@ -53,7 +53,7 @@ public class OpenController
      * @return The token access and other relevant data to token access. Status of CREATED. The location header to look up the new user.
      * @throws URISyntaxException we create some URIs during this method. If anything goes wrong with that creation, an exception is thrown.
      */
-    @PostMapping(value = "/createnewuser",
+    @PostMapping(value = "/api/auth/register",
         consumes = {"application/json"},
         produces = {"application/json"})
     public ResponseEntity<?> addSelf(

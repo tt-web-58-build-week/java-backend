@@ -26,6 +26,7 @@ public class User
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private long userid;
 
     /**
@@ -110,11 +111,11 @@ public class User
     /**
      * Setter for userid. Used primary for seeding data
      *
-     * @param userid the new userid (long) of the user
+     * @param user_id the new userid (long) of the user
      */
-    public void setUserid(long userid)
+    public void setUserid(long user_id)
     {
-        this.userid = userid;
+        this.userid = user_id;
     }
 
     /**

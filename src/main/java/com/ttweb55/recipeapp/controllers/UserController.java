@@ -21,7 +21,7 @@ import java.util.List;
  * The entry point for clients to access user data
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController
 {
     /**
@@ -38,7 +38,7 @@ public class UserController
      * @see UserService#findAll() UserService.findAll()
      */
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping(value = "/users",
+    @GetMapping(value = "",
         produces = "application/json")
     public ResponseEntity<?> listAllUsers()
     {
@@ -55,7 +55,7 @@ public class UserController
      * @return JSON object of the user you seek
      * @see UserService#findUserById(long) UserService.findUserById(long)
      */
-    @GetMapping(value = "/user/{userId}",
+    @GetMapping(value = "/{userId}",
         produces = "application/json")
     public ResponseEntity<?> getUserById(
         @PathVariable
@@ -93,17 +93,17 @@ public class UserController
      * @return A JSON list of users you seek
      * @see UserService#findByNameContaining(String) UserService.findByNameContaining(String)
      */
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping(value = "/user/name/like/{userName}",
-        produces = "application/json")
-    public ResponseEntity<?> getUserLikeName(
-        @PathVariable
-            String userName)
-    {
-        List<User> u = userService.findByNameContaining(userName);
-        return new ResponseEntity<>(u,
-            HttpStatus.OK);
-    }
+//    @PreAuthorize("hasAnyRole('ADMIN')")
+//    @GetMapping(value = "/user/name/like/{userName}",
+//        produces = "application/json")
+//    public ResponseEntity<?> getUserLikeName(
+//        @PathVariable
+//            String userName)
+//    {
+//        List<User> u = userService.findByNameContaining(userName);
+//        return new ResponseEntity<>(u,
+//            HttpStatus.OK);
+//    }
 
     /**
      * Given a complete User Object, create a new User record and accompanying useremail records
@@ -116,7 +116,7 @@ public class UserController
      * @throws URISyntaxException Exception if something does not work in creating the location header
      * @see UserService#save(User) UserService.save(User)
      */
-    @PostMapping(value = "/user",
+    @PostMapping(value = "/api/user",
         consumes = "application/json")
     public ResponseEntity<?> addNewUser(
         @Valid
