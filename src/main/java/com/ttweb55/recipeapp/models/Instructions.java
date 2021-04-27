@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "intructions")
+@Table(name = "instructions")
 public class Instructions extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

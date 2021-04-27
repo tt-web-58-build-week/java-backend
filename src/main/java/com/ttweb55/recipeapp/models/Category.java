@@ -16,9 +16,11 @@ public class Category extends Auditable{
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany(mappedBy = "categories")
-    @JsonIgnoreProperties(value = "categories", allowSetters = true)
-    private Set<Recipe> recipes = new HashSet<>();
+    @OneToMany(mappedBy = "category",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true)
+    @JsonIgnoreProperties(value = "category", allowSetters = true)
+    private Set<RecipeCategory> recipes = new HashSet<>();
 
     public Category() {
     }
@@ -43,11 +45,11 @@ public class Category extends Auditable{
         this.name = name;
     }
 
-    public Set<Recipe> getRecipes() {
+    public Set<RecipeCategory> getRecipes() {
         return recipes;
     }
 
-    public void setRecipes(Set<Recipe> recipes) {
+    public void setRecipes(Set<RecipeCategory> recipes) {
         this.recipes = recipes;
     }
 }
