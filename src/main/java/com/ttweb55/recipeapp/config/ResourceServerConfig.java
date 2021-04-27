@@ -68,6 +68,8 @@ public class ResourceServerConfig
             .authenticated()
             .antMatchers(HttpMethod.GET, "/api/recipes/**")
             .authenticated()
+            .antMatchers(HttpMethod.POST, "/api/recipes/**")
+             .authenticated()
             .antMatchers("/api/roles/**")
             .hasAnyRole("ADMIN")
             .anyRequest()
