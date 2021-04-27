@@ -66,6 +66,8 @@ public class ResourceServerConfig
                 "/oauth/revoke-token",
                 "/logout")
             .authenticated()
+            .antMatchers(HttpMethod.GET, "/api/recipes/**")
+            .authenticated()
             .antMatchers("/api/roles/**")
             .hasAnyRole("ADMIN")
             .anyRequest()
