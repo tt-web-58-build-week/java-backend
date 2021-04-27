@@ -47,14 +47,24 @@ public class Recipe extends Auditable
     @JsonIgnoreProperties(value = "recipe", allowSetters = true)
     private List<Instructions> instructions = new ArrayList<>();
 
+    @ManyToOne()
+    @JoinColumn(name = "userid")
+    @JsonIgnoreProperties(value = "recipes", allowSetters = true)
+    private User user;
+
     public Recipe()
     {
     }
 
-    public Recipe(String title, String source/*, Category category, Ingredient ingredient, Instructions instructions*/)
+    public Recipe(
+            String title,
+            String source,
+            User user
+            /*, Category category, Ingredient ingredient, Instructions instructions*/)
     {
         this.title = title;
         this.source = source;
+        this.user = user;
 //        this.category = category;
 //        this.ingredient = ingredient;
 //        this.instructions = instructions;
@@ -112,5 +122,13 @@ public class Recipe extends Auditable
 
     public void setInstructions(List<Instructions> instructions) {
         this.instructions = instructions;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

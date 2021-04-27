@@ -3,19 +3,18 @@ package com.ttweb55.recipeapp;
 import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
-import com.ttweb55.recipeapp.models.Role;
-import com.ttweb55.recipeapp.models.User;
-import com.ttweb55.recipeapp.models.UserRoles;
-import com.ttweb55.recipeapp.models.Useremail;
-import com.ttweb55.recipeapp.services.RoleService;
-import com.ttweb55.recipeapp.services.UserService;
+import com.ttweb55.recipeapp.models.*;
+import com.ttweb55.recipeapp.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * SeedData puts both known and random data into the database. It implements CommandLineRunner.
@@ -46,6 +45,37 @@ public class SeedData
     UserService userService;
 
     /**
+     * Connects the Recipe Service to this process
+     */
+    @Autowired
+    RecipeService recipeService;
+
+    @Autowired
+    IngredientsService ingredientsService;
+
+    @Autowired
+    InstructionsService instructionsService;
+
+
+    private List<Instructions> generateInstructions(String... details) {
+        return Arrays.stream(details).map(d -> {
+                    Instructions instructions = new Instructions();
+                    instructions.setInstructionDetails(d);
+                    return instructions;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<Ingredient> generateIngredients(String... names) {
+        return  Arrays.stream(names).map(name -> {
+                    Ingredient ingredient = new Ingredient();
+                    ingredient.setIngredientname(name);
+                    return ingredient;
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Generates test, seed data for our application
      * First a set of known data is seeded into our database.
      * Second a random set of data using Java Faker is seeded into our database.
@@ -69,6 +99,18 @@ public class SeedData
         r2 = roleService.save(r2);
         r3 = roleService.save(r3);
 
+        Recipe rec1 = new Recipe();
+        rec1.setTitle("Recipe 1");
+        rec1.setSource("Grandma");
+
+        Instructions rec1I1 = new Instructions();
+        rec1I1.setInstructionDetails("Some instructions");
+        rec1.getInstructions().add(rec1I1);
+
+        Ingredient rec1Ing1 = new Ingredient();
+        rec1Ing1.setIngredientname("A dash of hope");
+        rec1.getIngredients().add(rec1Ing1);
+
         // admin, data, user
         User u1 = new User("admin",
             "password",
@@ -82,14 +124,21 @@ public class SeedData
         u1.getRoles()
             .add(new UserRoles(u1,
                 r3));
-//        u1.getUseremails()
-//            .add(new Useremail(u1,
-//                "admin@email.local"));
-//        u1.getUseremails()
-//            .add(new Useremail(u1,
-//                "admin@mymail.local"));
 
-        userService.save(u1);
+        u1 = userService.save(u1);
+        rec1.setUser(u1);
+        rec1 = recipeService.save(rec1);
+
+        Recipe finalRec = rec1;
+        generateIngredients("Ingredient 1", "Ingredient 2", "Ingredient3").forEach(i -> {
+            i.setRecipe(finalRec);
+            ingredientsService.save(i);
+        });
+
+        generateInstructions("Do this", "Do that", "Do something else").forEach(instructions -> {
+            instructions.setRecipe(finalRec);
+            instructionsService.save(instructions);
+        });
 
         // data, user
         User u2 = new User("cinnamon",
@@ -101,15 +150,6 @@ public class SeedData
         u2.getRoles()
             .add(new UserRoles(u2,
                 r3));
-//        u2.getUseremails()
-//            .add(new Useremail(u2,
-//                "cinnamon@mymail.local"));
-//        u2.getUseremails()
-//            .add(new Useremail(u2,
-//                "hops@mymail.local"));
-//        u2.getUseremails()
-//            .add(new Useremail(u2,
-//                "bunny@email.local"));
         userService.save(u2);
 
         // user
@@ -119,9 +159,7 @@ public class SeedData
         u3.getRoles()
             .add(new UserRoles(u3,
                 r2));
-//        u3.getUseremails()
-//            .add(new Useremail(u3,
-//                "barnbarn@email.local"));
+
         userService.save(u3);
 
         User u4 = new User("puttat",
