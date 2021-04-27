@@ -114,6 +114,22 @@ public class SeedData
         rec1.setTitle("Recipe 1");
         rec1.setSource("Grandma");
 
+        Recipe rec2 = new Recipe();
+        rec2.setTitle("Recipe 2");
+        rec2.setSource("Gordon Ramsey");
+
+        Recipe rec3 = new Recipe();
+        rec3.setTitle("Recipe 3");
+        rec3.setSource("Anthony Bourdain");
+
+        Recipe rec4 = new Recipe();
+        rec4.setTitle("Recipe 4");
+        rec4.setSource("Guy Fieri");
+
+        Recipe rec5 = new Recipe();
+        rec5.setTitle("Recipe 5");
+        rec5.setSource("Paula Deen");
+
         // admin, data, user
         User u1 = new User("admin",
             "password",
@@ -130,6 +146,9 @@ public class SeedData
 
         u1 = userService.save(u1);
 
+        //recipes
+
+        //recipe 1
         rec1.setUser(u1);
         rec1.getCategories()
                 .add(new RecipeCategory(rec1, c1));
@@ -137,14 +156,90 @@ public class SeedData
                 .add(new RecipeCategory(rec1, c2));
         rec1 = recipeService.save(rec1);
 
-        Recipe finalRec = rec1;
+        Recipe finalRec1 = rec1;
         generateIngredients("Ingredient 1", "Ingredient 2", "Ingredient3").forEach(i -> {
-            i.setRecipe(finalRec);
+            i.setRecipe(finalRec1);
             ingredientsService.save(i);
         });
 
         generateInstructions("Do this", "Do that", "Do something else").forEach(instructions -> {
-            instructions.setRecipe(finalRec);
+            instructions.setRecipe(finalRec1);
+            instructionsService.save(instructions);
+        });
+
+        //recipe 2
+        rec2.setUser(u1);
+        rec2.getCategories()
+                .add(new RecipeCategory(rec2, c1));
+        rec2.getCategories()
+                .add(new RecipeCategory(rec2, c2));
+        rec2 = recipeService.save(rec2);
+
+        Recipe finalRec2 = rec2;
+        generateIngredients("Ingredient 1", "Ingredient 2", "Ingredient3").forEach(i -> {
+            i.setRecipe(finalRec2);
+            ingredientsService.save(i);
+        });
+
+        generateInstructions("Do this", "Do that", "Do something else").forEach(instructions -> {
+            instructions.setRecipe(finalRec2);
+            instructionsService.save(instructions);
+        });
+
+        //recipe 3
+        rec3.setUser(u1);
+        rec3.getCategories()
+                .add(new RecipeCategory(rec3, c1));
+        rec3.getCategories()
+                .add(new RecipeCategory(rec3, c2));
+        rec3 = recipeService.save(rec3);
+
+        Recipe finalRec3 = rec3;
+        generateIngredients("Ingredient 1", "Ingredient 2", "Ingredient3").forEach(i -> {
+            i.setRecipe(finalRec3);
+            ingredientsService.save(i);
+        });
+
+        generateInstructions("Do this", "Do that", "Do something else").forEach(instructions -> {
+            instructions.setRecipe(finalRec3);
+            instructionsService.save(instructions);
+        });
+
+        //recipe 4
+        rec4.setUser(u1);
+        rec4.getCategories()
+                .add(new RecipeCategory(rec4, c1));
+        rec4.getCategories()
+                .add(new RecipeCategory(rec4, c2));
+        rec4 = recipeService.save(rec4);
+
+        Recipe finalRec4 = rec4;
+        generateIngredients("Ingredient 1", "Ingredient 2", "Ingredient3").forEach(i -> {
+            i.setRecipe(finalRec4);
+            ingredientsService.save(i);
+        });
+
+        generateInstructions("Do this", "Do that", "Do something else").forEach(instructions -> {
+            instructions.setRecipe(finalRec4);
+            instructionsService.save(instructions);
+        });
+
+        //recipe 5
+        rec5.setUser(u1);
+        rec5.getCategories()
+                .add(new RecipeCategory(rec5, c1));
+        rec5.getCategories()
+                .add(new RecipeCategory(rec5, c2));
+        rec5 = recipeService.save(rec5);
+
+        Recipe finalRec5 = rec5;
+        generateIngredients("Ingredient 1", "Ingredient 2", "Ingredient3").forEach(i -> {
+            i.setRecipe(finalRec5);
+            ingredientsService.save(i);
+        });
+
+        generateInstructions("Do this", "Do that", "Do something else").forEach(instructions -> {
+            instructions.setRecipe(finalRec5);
             instructionsService.save(instructions);
         });
 
@@ -185,6 +280,7 @@ public class SeedData
             .add(new UserRoles(u5,
                 r2));
         userService.save(u5);
+
 
         if (false)
         {
