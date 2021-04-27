@@ -56,6 +56,9 @@ public class SeedData
     @Autowired
     InstructionsService instructionsService;
 
+    @Autowired
+    CategoryService categoryService;
+
 
     private List<Instructions> generateInstructions(String... details) {
         return Arrays.stream(details).map(d -> {
@@ -99,17 +102,17 @@ public class SeedData
         r2 = roleService.save(r2);
         r3 = roleService.save(r3);
 
+        Category c1 = new Category("Italian");
+        Category c2 = new Category("Pizza");
+        Category c3 = new Category("French");
+
+        c1 = categoryService.save(c1);
+        c2 = categoryService.save(c2);
+        c3 = categoryService.save(c3);
+
         Recipe rec1 = new Recipe();
         rec1.setTitle("Recipe 1");
         rec1.setSource("Grandma");
-
-        Instructions rec1I1 = new Instructions();
-        rec1I1.setInstructionDetails("Some instructions");
-        rec1.getInstructions().add(rec1I1);
-
-        Ingredient rec1Ing1 = new Ingredient();
-        rec1Ing1.setIngredientname("A dash of hope");
-        rec1.getIngredients().add(rec1Ing1);
 
         // admin, data, user
         User u1 = new User("admin",
@@ -126,7 +129,12 @@ public class SeedData
                 r3));
 
         u1 = userService.save(u1);
+
         rec1.setUser(u1);
+        rec1.getCategories()
+                .add(new RecipeCategory(rec1, c1));
+        rec1.getCategories()
+                .add(new RecipeCategory(rec1, c2));
         rec1 = recipeService.save(rec1);
 
         Recipe finalRec = rec1;

@@ -17,23 +17,17 @@ public class Recipe extends Auditable
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long recipeid;
 
+    @Column(nullable = false)
     private String title;
+
     private String source;
 
-//    So Recipe - Many to many with Category
-//One to many Ingredients
-//One to many Instructions
-    //    private Category category;
-    @ManyToMany()
-    @JoinTable(name = "recipecategories",
-        joinColumns = @JoinColumn(name = "recipeid"),
-        inverseJoinColumns = @JoinColumn(name = "categoryid")
-    )
-    @JsonIgnoreProperties(value = "recipes", allowSetters = true)
-    private Set<Category> categories = new HashSet<>();
+    @OneToMany(mappedBy = "recipe",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true)
+    @JsonIgnoreProperties(value = "recipe", allowSetters = true)
+    private Set<RecipeCategory> categories = new HashSet<>();
 
-
-//    private Ingredient ingredient;
     @OneToMany(mappedBy = "recipe",
         cascade = CascadeType.ALL,
         orphanRemoval = true)
@@ -100,11 +94,11 @@ public class Recipe extends Auditable
         this.source = source;
     }
 
-    public Set<Category> getCategories() {
+    public Set<RecipeCategory> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(Set<RecipeCategory> categories) {
         this.categories = categories;
     }
 
