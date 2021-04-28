@@ -20,7 +20,7 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
             "FROM recipecategories rc " +
             "LEFT JOIN recipes r " +
             "ON rc.recipeid = r.recipeid " +
-            "WHERE rc.categoryid = :categoryid",
+            "WHERE (rc.categoryid = :categoryid AND r.title LIKE '%:title%'",
             nativeQuery = true)
-    Iterable<RecipeCategory> findRecipesByCategoryId(@Param("categoryid") Long categoryid);
+    Iterable<RecipeCategory> findRecipesByCategoryId(@Param("categoryid") Long categoryid, String title);
 }
