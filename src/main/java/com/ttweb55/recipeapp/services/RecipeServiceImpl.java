@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Transactional
 @Service(value = "recipeService")
@@ -18,19 +20,11 @@ public class RecipeServiceImpl implements RecipeService {
     private RecipeRepository recipeRepository;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private CategoryService categoryService;
 
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Autowired
-    private IngredientsRepository ingredientsRepository;
-
-    @Autowired
-    private InstructionsRepository instructionsRepository;
 
     // Only for seed data for now!
     @Override
@@ -144,5 +138,16 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         return recipeRepository.save(currentRecipe);
+    }
+
+    @Override
+    public Set<RecipeCategory> findAllRecipesByCategoryId(Long categoryid) {
+        Set<RecipeCategory> recipes = new HashSet<>();
+
+        recipeRepository.findRecipesByCategoryId(categoryid)
+                .iterator()
+                .forEachRemaining(recipes::add);
+
+        return recipes;
     }
 }
