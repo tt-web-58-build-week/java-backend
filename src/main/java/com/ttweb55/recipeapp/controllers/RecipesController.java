@@ -1,8 +1,7 @@
 package com.ttweb55.recipeapp.controllers;
 
-import com.ttweb55.recipeapp.models.Recipe;
-import com.ttweb55.recipeapp.models.RecipeMinimum;
-import com.ttweb55.recipeapp.models.User;
+import com.ttweb55.recipeapp.models.*;
+import com.ttweb55.recipeapp.services.CategoryService;
 import com.ttweb55.recipeapp.services.RecipeService;
 import com.ttweb55.recipeapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/api/recipes")
@@ -25,6 +25,9 @@ public class RecipesController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CategoryService categoryService;
 
     @GetMapping("")
     public ResponseEntity<?> getAllRecipes() {
@@ -38,6 +41,17 @@ public class RecipesController {
     public ResponseEntity<?> getRecipeById(@PathVariable Long recipeId) {
         Recipe recipe = recipeService.findRecipeById(recipeId);
         return new ResponseEntity<>(recipe, HttpStatus.OK);
+    }
+
+//    search
+
+    @GetMapping(value = "/search/{categoryId}", produces = {"application/json"})
+    public ResponseEntity<?> getRecipeByCategoryId(@PathVariable Long categoryId)
+    {
+//        "Showing all recipes within category " + categoryService.findByCategoryId(categoryId).getName()
+        Set<RecipeCategory> resRecipes = categoryService.findByCategoryId(categoryId).getRecipes();
+
+        return new ResponseEntity<>(resRecipes, HttpStatus.OK);
     }
 
     @PostMapping(value = "", consumes = "application/json")
