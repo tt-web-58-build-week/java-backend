@@ -54,7 +54,7 @@ public class Recipe extends Auditable
             String title,
             String source,
             User user
-            /*, Category category, Ingredient ingredient, Instructions instructions*/)
+            /*, List<Long> categories, List<String> instructions, List<String> ingredients*/)
     {
         this.title = title;
         this.source = source;
