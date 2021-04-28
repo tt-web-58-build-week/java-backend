@@ -6,6 +6,9 @@ import com.ttweb55.recipeapp.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service(value = "categoryService")
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
@@ -20,5 +23,14 @@ public class CategoryServiceImpl implements CategoryService {
     public Category findByCategoryId(Long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category with id '" + id + "' Not found"));
+    }
+
+    @Override
+    public List<Category> findAllCategories() {
+        List<Category> categories = new ArrayList<>();
+        categoryRepository.findAll()
+                .iterator()
+                .forEachRemaining(categories::add);
+        return categories;
     }
 }
