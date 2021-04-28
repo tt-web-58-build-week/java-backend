@@ -32,6 +32,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Autowired
     private InstructionsRepository instructionsRepository;
 
+    // Only for seed data for now!
     @Override
     public Recipe save(Recipe recipe) {
         return recipeRepository.save(recipe);
@@ -99,52 +100,49 @@ public class RecipeServiceImpl implements RecipeService {
             throw new EntityNotFoundException("Recipe id " + id + " Not Found!");
         }
     }
-//    @Transactional
-//    @Override
-//    public Recipe updateRecipe(Recipe recipe, long id) {
-//        Recipe currentRecipe = findRecipeById(id);
-//
-//        if (recipe.getTitle() != null)
-//        {
-//            currentRecipe.setTitle(recipe.getTitle());
-//        }
-//
-//        if (recipe.getSource() != null)
-//        {
-//            currentRecipe.setSource(recipe.getSource());
-//        }
-//
-//        if (recipe.getCategories() != null) {
-//            currentRecipe.getCategories().clear();
-//            for (RecipeCategory rc : recipe.getCategories()) {
-//                Category addCategory = categoryRepository.findById(rc.getCategory().getCategoryid())
-//                        .orElseThrow(() -> new EntityNotFoundException("Category Id " + rc.getCategory().getCategoryid() + " Not found!"));
-//                currentRecipe.getCategories()
-//                        .add(new RecipeCategory(currentRecipe, addCategory));
-//            }
-//        }
-//
-//        if (recipe.getIngredients() != null) {
-//            currentRecipe.getIngredients().clear();
-//            for (Ingredient i : recipe.getIngredients()) {
-//                Ingredient addIngredient = ingredientsRepository.findById(i.getIngredientid())
-//                        .orElseThrow(() -> new EntityNotFoundException("Ingredient id " + i.getIngredientid() + " Not Found!"));
-//
-//                addIngredient.setIngredientname(i.getIngredientname());
-//                currentRecipe.getIngredients().add(addIngredient);
-//            }
-//        }
-//
-//        if (recipe.getInstructions() != null) {
-//            currentRecipe.getInstructions().clear();
-//            for (Instructions inst : recipe.getInstructions()) {
-//                Instructions addInstructions = instructionsRepository.findById(inst.getInstructionsid())
-//                        .orElseThrow(() -> new EntityNotFoundException("Instructions id" + inst.getInstructionsid() + " Not found!"));
-//                addInstructions.setInstructionDetails(inst.getInstructionDetails());
-//                currentRecipe.getInstructions().add(addInstructions);
-//            }
-//        }
-//
-//        return recipeRepository.save(currentRecipe);
-//    }
+    @Transactional
+    @Override
+    public Recipe updateRecipe(RecipeMinimum recipe, long id) {
+        Recipe currentRecipe = findRecipeById(id);
+
+        if (recipe.getTitle() != null)
+        {
+            currentRecipe.setTitle(recipe.getTitle());
+        }
+
+        if (recipe.getSource() != null)
+        {
+            currentRecipe.setSource(recipe.getSource());
+        }
+
+        if (recipe.getCategories() != null) {
+            currentRecipe.getCategories().clear();
+            for (Long categoryId : recipe.getCategories()) {
+                Category addCategory = categoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new EntityNotFoundException("Category Id " + categoryId + " Not found!"));
+                currentRecipe.getCategories()
+                        .add(new RecipeCategory(currentRecipe, addCategory));
+            }
+        }
+
+        if (recipe.getIngredients() != null) {
+            currentRecipe.getIngredients().clear();
+            for (String i : recipe.getIngredients()) {
+                Ingredient addIngredient = new Ingredient();
+                addIngredient.setIngredientname(i);
+                currentRecipe.getIngredients().add(addIngredient);
+            }
+        }
+
+        if (recipe.getInstructions() != null) {
+            currentRecipe.getInstructions().clear();
+            for (String inst : recipe.getInstructions()) {
+                Instructions addInstructions = new Instructions();
+                addInstructions.setInstructionDetails(inst);
+                currentRecipe.getInstructions().add(addInstructions);
+            }
+        }
+
+        return recipeRepository.save(currentRecipe);
+    }
 }

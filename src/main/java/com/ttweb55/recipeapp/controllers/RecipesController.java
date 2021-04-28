@@ -67,19 +67,18 @@ public class RecipesController {
                 HttpStatus.CREATED);
     }
 
-//    @PutMapping(value = "/recipe/{recipeId}", consumes = "application/json")
-//    public ResponseEntity<?> updateRecipe(
-//            @Valid
-//            @RequestBody
-//                    Recipe updateRecipe,
-//            @PathVariable
-//                    long recipeId)
-//    {
-//        updateRecipe.setRecipeid(recipeId);
-//        recipeService.save(updateRecipe);
-//
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+    @PutMapping(value = "/recipe/{recipeId}", consumes = "application/json")
+    public ResponseEntity<?> updateRecipe(
+            @Valid
+            @RequestBody
+                    RecipeMinimum updateRecipe,
+            @PathVariable
+                    long recipeId)
+    {
+        recipeService.updateRecipe(updateRecipe, recipeId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @DeleteMapping(value = "/recipe/{id}")
     public ResponseEntity<?> deleteRecipeById(
