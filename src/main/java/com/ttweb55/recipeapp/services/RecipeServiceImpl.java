@@ -2,14 +2,16 @@ package com.ttweb55.recipeapp.services;
 
 import com.ttweb55.recipeapp.exceptions.ResourceNotFoundException;
 import com.ttweb55.recipeapp.models.*;
-import com.ttweb55.recipeapp.repository.RecipeRepository;
-import com.ttweb55.recipeapp.repository.UserRepository;
+import com.ttweb55.recipeapp.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Service(value = "recipeService")
 public class RecipeServiceImpl implements RecipeService {
     @Autowired
@@ -20,6 +22,15 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private IngredientsRepository ingredientsRepository;
+
+    @Autowired
+    private InstructionsRepository instructionsRepository;
 
     @Override
     public Recipe save(Recipe recipe) {
@@ -75,4 +86,65 @@ public class RecipeServiceImpl implements RecipeService {
                 .orElseThrow(() -> new ResourceNotFoundException("Recipe with id '"
                 + id + "' Not Found"));
     }
+
+    @Transactional
+    @Override
+    public void deleteRecipe(long id) {
+        if (recipeRepository.findById(id)
+                .isPresent())
+        {
+            recipeRepository.deleteById(id);
+        } else
+        {
+            throw new EntityNotFoundException("Recipe id " + id + " Not Found!");
+        }
+    }
+//    @Transactional
+//    @Override
+//    public Recipe updateRecipe(Recipe recipe, long id) {
+//        Recipe currentRecipe = findRecipeById(id);
+//
+//        if (recipe.getTitle() != null)
+//        {
+//            currentRecipe.setTitle(recipe.getTitle());
+//        }
+//
+//        if (recipe.getSource() != null)
+//        {
+//            currentRecipe.setSource(recipe.getSource());
+//        }
+//
+//        if (recipe.getCategories() != null) {
+//            currentRecipe.getCategories().clear();
+//            for (RecipeCategory rc : recipe.getCategories()) {
+//                Category addCategory = categoryRepository.findById(rc.getCategory().getCategoryid())
+//                        .orElseThrow(() -> new EntityNotFoundException("Category Id " + rc.getCategory().getCategoryid() + " Not found!"));
+//                currentRecipe.getCategories()
+//                        .add(new RecipeCategory(currentRecipe, addCategory));
+//            }
+//        }
+//
+//        if (recipe.getIngredients() != null) {
+//            currentRecipe.getIngredients().clear();
+//            for (Ingredient i : recipe.getIngredients()) {
+//                Ingredient addIngredient = ingredientsRepository.findById(i.getIngredientid())
+//                        .orElseThrow(() -> new EntityNotFoundException("Ingredient id " + i.getIngredientid() + " Not Found!"));
+//
+//                addIngredient.setIngredientname(i.getIngredientname());
+//                currentRecipe.getIngredients().add(addIngredient);
+//            }
+//        }
+//
+//        if (recipe.getInstructions() != null) {
+//            currentRecipe.getInstructions().clear();
+//            for (Instructions inst : recipe.getInstructions()) {
+//                Instructions addInstructions = instructionsRepository.findById(inst.getInstructionsid())
+//                        .orElseThrow(() -> new EntityNotFoundException("Instructions id" + inst.getInstructionsid() + " Not found!"));
+//                addInstructions.setInstructionDetails(inst.getInstructionDetails());
+//                currentRecipe.getInstructions().add(addInstructions);
+//            }
+//        }
+//
+//        return recipeRepository.save(currentRecipe);
+//    }
 }
