@@ -15,11 +15,10 @@ public interface RecipeService {
     // START - methods used by controller
     public Recipe createNewRecipe(RecipeMinimum recipe, User user);
     public Recipe updateRecipe(RecipeMinimum recipe, long id);
-//    Set<RecipeCategory> getRecipeByCategoryId(long id);
     void deleteRecipe(long id);
     // END - methods used by controller
 
     public List<Recipe> findAllRecipesForCurrentUser(String username);
-    public Set<RecipeCategory> findAllRecipesByCategoryId(Long categoryid);
+    public Set<RecipeCategory> findAllRecipesByCategoryId(Long categoryid, String title);
     public Recipe findRecipeById(Long id);
 }

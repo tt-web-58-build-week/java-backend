@@ -141,10 +141,10 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Set<RecipeCategory> findAllRecipesByCategoryId(Long categoryid) {
+    public Set<RecipeCategory> findAllRecipesByCategoryId(Long categoryid, String title) {
         Set<RecipeCategory> recipes = new HashSet<>();
 
-        recipeRepository.findRecipesByCategoryId(categoryid)
+        recipeRepository.findRecipesByCategoryId(categoryid, title)
                 .iterator()
                 .forEachRemaining(recipes::add);
 
