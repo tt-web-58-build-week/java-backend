@@ -105,10 +105,32 @@ public class SeedData
         Category c1 = new Category("Italian");
         Category c2 = new Category("Pizza");
         Category c3 = new Category("French");
+        Category c4 = new Category("Mexican");
+        Category c5 = new Category("Dessert");
+        Category c6 = new Category("BBQ");
+        Category c7 = new Category("Thai");
+        Category c8 = new Category("Chinese");
+        Category c9 = new Category("Egyptian");
+        Category c10 = new Category("Hawaiian");
+        Category c11 = new Category("Chuck Norris Fuel");
+        Category c12 = new Category("Breakfast");
+        Category c13 = new Category("Lunch");
+        Category c14 = new Category("Dinner");
 
         c1 = categoryService.save(c1);
         c2 = categoryService.save(c2);
         c3 = categoryService.save(c3);
+        c4 = categoryService.save(c4);
+        c5 = categoryService.save(c5);
+        c6 = categoryService.save(c6);
+        c7 = categoryService.save(c7);
+        c8 = categoryService.save(c8);
+        c9 = categoryService.save(c9);
+        c10 = categoryService.save(c10);
+        c11 = categoryService.save(c11);
+        c12 = categoryService.save(c12);
+        c13 = categoryService.save(c13);
+        c14 = categoryService.save(c14);
 
         Recipe rec1 = new Recipe();
         rec1.setTitle("Recipe 1");

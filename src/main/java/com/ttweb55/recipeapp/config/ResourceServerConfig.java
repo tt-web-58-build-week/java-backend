@@ -74,6 +74,8 @@ public class ResourceServerConfig
             .authenticated()
             .antMatchers(HttpMethod.DELETE, "/api/recipes/**")
             .authenticated()
+            .antMatchers(HttpMethod.GET, "/api/categories/**")
+            .authenticated()
             .antMatchers("/api/roles/**")
             .hasAnyRole("ADMIN")
             .anyRequest()
