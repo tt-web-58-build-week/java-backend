@@ -1,19 +1,24 @@
 package com.ttweb55.recipeapp.services;
 
 import com.ttweb55.recipeapp.exceptions.ResourceNotFoundException;
-import com.ttweb55.recipeapp.models.Role;
-import com.ttweb55.recipeapp.models.User;
-import com.ttweb55.recipeapp.models.UserRoles;
-import com.ttweb55.recipeapp.models.Useremail;
+import com.ttweb55.recipeapp.models.*;
 import com.ttweb55.recipeapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.security.oauth2.client.resource.OAuth2AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Implements UserService Interface
@@ -170,18 +175,6 @@ public class UserServiceImpl
                 }
             }
 
-//            if (user.getUseremails()
-//                .size() > 0)
-//            {
-//                currentUser.getUseremails()
-//                    .clear();
-//                for (Useremail ue : user.getUseremails())
-//                {
-//                    currentUser.getUseremails()
-//                        .add(new Useremail(currentUser,
-//                            ue.getUseremail()));
-//                }
-//            }
 
             return userrepos.save(currentUser);
         } else
@@ -197,5 +190,22 @@ public class UserServiceImpl
     public void deleteAll()
     {
         userrepos.deleteAll();
+    }
+
+    @Override
+    public User createUserWithAvatar(UserMinimumWithAvatar newMinUser) {
+        User newUser = new User();
+        newUser.setUsername(newMinUser.getUsername()
+            .toLowerCase());
+        newUser.setPasswordNoEncrypt(newMinUser.getPassword());
+        newUser.setEmail(newMinUser.getEmail()
+            .toLowerCase());
+
+        Set<UserRoles> newRoles = new HashSet<>();
+        newRoles.add(new UserRoles(newUser,
+                roleService.findByName("user")));
+        newUser.setRoles(newRoles);
+
+        return userrepos.save(newUser);
     }
 }

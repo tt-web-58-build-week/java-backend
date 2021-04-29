@@ -1,24 +1,23 @@
 package com.ttweb55.recipeapp.controllers;
 
-import com.ttweb55.recipeapp.models.User;
-import com.ttweb55.recipeapp.models.UserMinimum;
-import com.ttweb55.recipeapp.models.UserRoles;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ttweb55.recipeapp.models.*;
 import com.ttweb55.recipeapp.services.RoleService;
 import com.ttweb55.recipeapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class OpenController
 
         newUser.setUsername(newMinUser.getUsername());
         newUser.setPassword(newMinUser.getPassword());
-        newUser.setEmail(newMinUser.getPrimaryemail());
+        newUser.setEmail(newMinUser.getEmail());
 
         // add the default role of user
         Set<UserRoles> newRoles = new HashSet<>();
@@ -82,7 +81,7 @@ public class OpenController
         // set the location header for the newly created resource
         // The location comes from a different controller!
         HttpHeaders responseHeaders = new HttpHeaders();
-        URI newUserURI = ServletUriComponentsBuilder.fromUriString(httpServletRequest.getServerName() + ":" + httpServletRequest.getLocalPort() + "/users/user/{userId}")
+        URI newUserURI = ServletUriComponentsBuilder.fromUriString(httpServletRequest.getServerName() + ":" + httpServletRequest.getLocalPort() + "/api/user/{userId}")
             .buildAndExpand(newUser.getUserid())
             .toUri();
         responseHeaders.setLocation(newUserURI);
@@ -133,4 +132,71 @@ public class OpenController
 
     }
 
+    @PostMapping(value = "/api/auth/register2",
+        consumes = "multipart/form-data")
+    public ResponseEntity<?> addSelf2(
+            HttpServletRequest httpServletRequest,
+            @RequestBody
+            @ModelAttribute UserMinimumWithAvatar newMinUser,
+            ModelMap modelMap
+            ) throws JsonProcessingException {
+        User newUser = new User();
+
+        newUser.setUsername(newMinUser.getUsername());
+        newUser.setPassword(newMinUser.getPassword());
+        newUser.setEmail(newMinUser.getEmail());
+
+        // add the default role of user
+        Set<UserRoles> newRoles = new HashSet<>();
+        newRoles.add(new UserRoles(newUser,
+                roleService.findByName("user")));
+        newUser.setRoles(newRoles);
+
+        newUser = userService.save(newUser);
+
+        // set the location header for the newly created resource
+        // The location comes from a different controller!
+        HttpHeaders responseHeaders = new HttpHeaders();
+        URI newUserURI = ServletUriComponentsBuilder.fromUriString(httpServletRequest.getServerName() + ":" + httpServletRequest.getLocalPort() + "/api/user/{userId}")
+                .buildAndExpand(newUser.getUserid())
+                .toUri();
+        responseHeaders.setLocation(newUserURI);
+
+        // return the access token
+        // To get the access token, surf to the endpoint /login just as if a client had done this.
+        RestTemplate restTemplate = new RestTemplate();
+        String requestURI = "http://localhost" + ":" + httpServletRequest.getLocalPort() + "/api/auth/login";
+
+        List<MediaType> acceptableMediaTypes = new ArrayList<>();
+        acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setAccept(acceptableMediaTypes);
+        headers.setBasicAuth(System.getenv("OAUTHCLIENTID"),
+                System.getenv("OAUTHCLIENTSECRET"));
+
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("grant_type",
+                "password");
+        map.add("scope",
+                "read write trust");
+        map.add("username",
+                newMinUser.getUsername());
+        map.add("password",
+                newMinUser.getPassword());
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map,
+                headers);
+
+        String theToken = restTemplate.postForObject(requestURI,
+                request,
+                String.class);
+
+        Token userToken = new ObjectMapper().readValue(theToken, Token.class);
+        UserWithToken userResponse = new UserWithToken(newUser, userToken);
+        return new ResponseEntity<>(userResponse,
+                responseHeaders,
+                HttpStatus.CREATED);
+    }
 }

@@ -1,6 +1,7 @@
 package com.ttweb55.recipeapp.services;
 
 import com.ttweb55.recipeapp.models.User;
+import com.ttweb55.recipeapp.models.UserMinimumWithAvatar;
 
 import java.util.List;
 
@@ -79,4 +80,6 @@ public interface UserService
      * Deletes all record and their associated records from the database
      */
     public void deleteAll();
+
+    User createUserWithAvatar(UserMinimumWithAvatar user);
 }
