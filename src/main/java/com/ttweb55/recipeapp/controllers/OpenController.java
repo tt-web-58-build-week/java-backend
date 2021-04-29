@@ -3,6 +3,7 @@ package com.ttweb55.recipeapp.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ttweb55.recipeapp.models.*;
+import com.ttweb55.recipeapp.services.AvatarService;
 import com.ttweb55.recipeapp.services.RoleService;
 import com.ttweb55.recipeapp.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -43,6 +43,9 @@ public class OpenController
      */
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private AvatarService avatarService;
 
     /**
      * This endpoint always anyone to create an account with the default role of USER. That role is hardcoded in this method.
@@ -137,8 +140,7 @@ public class OpenController
     public ResponseEntity<?> addSelf2(
             HttpServletRequest httpServletRequest,
             @RequestBody
-            @ModelAttribute UserMinimumWithAvatar newMinUser,
-            ModelMap modelMap
+            @ModelAttribute UserMinimumWithAvatar newMinUser
             ) throws JsonProcessingException {
         User newUser = new User();
 
@@ -151,6 +153,9 @@ public class OpenController
         newRoles.add(new UserRoles(newUser,
                 roleService.findByName("user")));
         newUser.setRoles(newRoles);
+
+        // handle avatar
+        Avatar newUserAvatar = avatarService.save(newMinUser.getAvatar());
 
         newUser = userService.save(newUser);
 
