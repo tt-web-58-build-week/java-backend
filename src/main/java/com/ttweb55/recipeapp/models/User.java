@@ -51,16 +51,6 @@ public class User
     @Email
     private String email;
 
-//    /**
-//     * A list of emails for this user
-//     */
-//    @OneToMany(mappedBy = "user",
-//        cascade = CascadeType.ALL,
-//        orphanRemoval = true)
-//    @JsonIgnoreProperties(value = "user",
-//        allowSetters = true)
-//    private List<Useremail> useremails = new ArrayList<>();
-
     /**
      * Part of the join relationship between user and role
      * connects users to the user role combination
@@ -77,6 +67,11 @@ public class User
         orphanRemoval = true)
     @JsonIgnoreProperties(value = "user", allowSetters = true)
     private List<Recipe> recipes = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL,
+        orphanRemoval = true)
+    @JoinColumn(name = "avatarid")
+    private Avatar avatar;
 
     /**
      * Default constructor used primarily by the JPA.
@@ -193,26 +188,6 @@ public class User
         this.password = passwordEncoder.encode(password);
     }
 
-//    /**
-//     * Getter for the list of useremails for this user
-//     *
-//     * @return the list of useremails (List(Useremail)) for this user
-//     */
-//    public List<Useremail> getUseremails()
-//    {
-//        return useremails;
-//    }
-
-//    /**
-//     * Setter for list of useremails for this user
-//     *
-//     * @param useremails the new list of useremails (List(Useremail)) for this user
-//     */
-//    public void setUseremails(List<Useremail> useremails)
-//    {
-//        this.useremails = useremails;
-//    }
-
     /**
      * Getter for user role combinations
      *
@@ -239,6 +214,14 @@ public class User
 
     public void setRecipes(List<Recipe> recipes) {
         this.recipes = recipes;
+    }
+
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
     }
 
     /**
